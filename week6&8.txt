@@ -1,0 +1,396 @@
+week 6
+Qn2
+
+#include<iostream>
+using namespace std;
+class Stack
+{
+    int top;
+    int arr[100];
+    public:
+            Stack()
+            {
+                top=-1;
+            }
+            void push(int x)
+            {
+                if(top>=99)
+                {
+                    cout<<x<<" cannot be Pushed as Stack is Full"<<endl;
+                    return;
+                }
+                else
+                {
+                    arr[++top]=x;
+                }
+            }
+            int peek()
+            {
+                return arr[top];
+            }
+            int pop()
+            {
+                if(top<0)
+                {
+                    cout<<"Cannot be Popped as Stack is Empty"<<endl;
+                    return 0;
+                }
+                else
+                    return arr[top--];
+            }
+            bool isEmpty()
+            {
+                if(top<0)
+                    return true;
+                else
+                    return false;
+            }
+};
+int length(char a[])
+{
+    int i=0;
+    while(a[i]!='\0')
+    {
+        i++;
+    }
+    return i;
+}
+void post_eval(char a[])
+{
+    int n=length(a);
+    Stack s;
+    int x,y,z;
+    for(int i=0;i<n;i++)
+    {
+        if(a[i]>='0'&& a[i]<='9')
+        {
+            s.push(a[i]-'0');
+        }
+        else if(a[i]=='+'||a[i]=='-'||a[i]=='*'||a[i]=='/')
+        {
+            y=s.pop();
+            x=s.pop();
+            switch(a[i])
+            {
+            case '+':
+                z=x+y;
+                break;
+            case '-':
+                z=x-y;
+                break;
+            case '*':
+                z=x*y;
+                break;
+            case '/':
+                z=x/y;
+                break;
+            }
+            s.push(z);
+        }
+    }
+    int result=s.pop();
+    if(s.isEmpty())
+        cout<<"Result="<<result<<endl;
+    else
+        cout<<"Invalid Postfix Expression"<<endl;
+}
+void pre_eval(char a[])
+{
+    int n=length(a);
+    Stack t;
+    int x,y,z;
+    for(int i=n-1;i>=0;i--)
+    {
+        if(a[i]>='0'&& a[i]<='9')
+        {
+            t.push(a[i]-'0');
+        }
+        else if(a[i]=='+'||a[i]=='-'||a[i]=='*'||a[i]=='/')
+        {
+            x=t.pop();
+            y=t.pop();
+            switch(a[i])
+            {
+            case '+':
+                z=x+y;
+                break;
+            case '-':
+                z=x-y;
+                break;
+            case '*':
+                z=x*y;
+                break;
+            case '/':
+                z=x/y;
+                break;
+            }
+            t.push(z);
+        }
+    }
+    int result=t.pop();
+    if(t.isEmpty())
+        cout<<"Result="<<result<<endl;
+    else
+        cout<<"Invalid Prefix Expression"<<endl;
+}
+int main()
+{
+    char a[50],b[50];
+    cout<<"Enter Postfix Expression:"<<endl;
+    cin.getline(a,50,'$');
+    post_eval(a);
+    cout<<"Enter Prefix Expression:"<<endl;
+    cin.getline(b,50,'$');
+    pre_eval(b);
+    return 0;
+}
+ week8
+
+Qn1
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+class LinkedList {
+private:
+    Node* head;
+
+public:
+    LinkedList() {
+        head = nullptr;
+    }
+
+    // Insert at the beginning
+    void insertAtBeginning(int value) {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = head;
+        head = newNode;
+    }
+
+    // Insert at the end
+    void insertAtEnd(int value) {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = nullptr;
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+
+    // Insert before a given element
+    void insertBefore(int target, int value) {
+        if (head == nullptr) {
+            cout << "List is empty, cannot insert before " << target << endl;
+            return;
+        }
+        if (head->data == target) {
+            insertAtBeginning(value);
+            return;
+        }
+        Node* newNode = new Node();
+        newNode->data = value;
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->data != target) {
+            temp = temp->next;
+        }
+        if (temp->next == nullptr) {
+            cout << "Element " << target << " not found in the list." << endl;
+            delete newNode;
+        } else {
+            newNode->next = temp->next;
+            temp->next = newNode;
+        }
+    }
+
+    // Insert after a given element
+    void insertAfter(int target, int value) {
+        Node* temp = head;
+        while (temp != nullptr && temp->data != target) {
+            temp = temp->next;
+        }
+        if (temp == nullptr) {
+            cout << "Element " << target << " not found in the list." << endl;
+        } else {
+            Node* newNode = new Node();
+            newNode->data = value;
+            newNode->next = temp->next;
+            temp->next = newNode;
+        }
+    }
+
+    // Delete a given element
+    void deleteElement(int value) {
+        if (head == nullptr) {
+            cout << "List is empty, cannot delete " << value << endl;
+            return;
+        }
+        if (head->data == value) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->data != value) {
+            temp = temp->next;
+        }
+        if (temp->next == nullptr) {
+            cout << "Element " << value << " not found in the list." << endl;
+        } else {
+            Node* toDelete = temp->next;
+            temp->next = temp->next->next;
+            delete toDelete;
+        }
+    }
+
+    // Print the list
+    void printList() {
+        if (head == nullptr) {
+            cout << "List is empty." << endl;
+            return;
+        }
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+        cout << "NULL" << endl;
+    }
+};
+
+int main() {
+    LinkedList list;
+    int choice, value, target;
+
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Insert at the beginning\n";
+        cout << "2. Insert at the end\n";
+        cout << "3. Insert before an element\n";
+        cout << "4. Insert after an element\n";
+        cout << "5. Delete an element\n";
+        cout << "6. Print the list\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cout << "Enter the value to insert at the beginning: ";
+            cin >> value;
+            list.insertAtBeginning(value);
+            break;
+        case 2:
+            cout << "Enter the value to insert at the end: ";
+            cin >> value;
+            list.insertAtEnd(value);
+            break;
+        case 3:
+            cout << "Enter the target element and the value to insert before it: ";
+            cin >> target >> value;
+            list.insertBefore(target, value);
+            break;
+        case 4:
+            cout << "Enter the target element and the value to insert after it: ";
+            cin >> target >> value;
+            list.insertAfter(target, value);
+            break;
+        case 5:
+            cout << "Enter the value to delete: ";
+            cin >> value;
+            list.deleteElement(value);
+            break;
+        case 6:
+            list.printList();
+            break;
+        case 7:
+            cout << "Exiting program." << endl;
+            break;
+        default:
+            cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 7);
+
+    return 0;
+}
+
+Qn2
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+class Stack {
+private:
+    Node* top;
+
+public:
+    Stack() {
+        top = nullptr;
+    }
+
+    // Push operation
+    void push(int value) {
+        Node* newNode = new Node();
+        newNode->data = value;
+        newNode->next = top;
+        top = newNode;
+    }
+
+    // Pop operation
+    void pop() {
+        if (isEmpty()) {
+            cout << "Stack is empty. Cannot pop." << endl;
+            return;
+        }
+        Node* temp = top;
+        cout << "Popped element: " << top->data << endl;
+        top = top->next;
+        delete temp;
+    }
+
+    // Check if stack is empty
+    bool isEmpty() {
+        return top == nullptr;
+    }
+
+    // Display stack elements
+    void display() {
+        if (isEmpty()) {
+            cout << "Stack is empty." << endl;
+            return;
+        }
+        Node* temp = top;
+        cout << "Stack elements: ";
+        while (temp != nullptr) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    Stack stack;
+    stack.push(10);
+    stack.push(20);
+    stack.push(30);
+    stack.display();
+    stack.pop();
+    stack.display();
+    return 0;
+}

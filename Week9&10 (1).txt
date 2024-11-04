@@ -1,0 +1,886 @@
+Week9
+
+Qn1-
+
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+struct node{
+    struct node* pre;
+    int data;
+    struct node* next;
+};
+struct node* front=NULL;
+struct node* rear=NULL;
+void insertatrear(int ele){
+    struct node* newnode=new struct node;
+    newnode->data=ele;
+    newnode->next=NULL;
+    if(front==NULL && rear==NULL){
+        front=newnode;
+        rear=newnode;
+        newnode->pre=NULL;
+    }else{
+        rear->next=newnode;
+        newnode->pre=rear;
+        rear=newnode;
+    }
+}
+void deleterear(){
+    if(rear==NULL)
+        cout<<"The List is empty"<<endl;
+    else if(rear==front){
+        struct node* temp=rear;
+        delete temp;
+        front=rear=NULL;
+    }else{
+        struct node* temp=rear;
+        rear=rear->pre;
+        rear->next=NULL;
+        delete temp;
+    }
+}
+void insertatpos(int pos){
+    if(pos<1){
+        cout<<"Invalid position"<<endl;
+        return;
+    }
+    struct node* newnode=new struct node;
+    cout<<"Enter data to add at position: ";
+    cin>>newnode->data;
+    if(pos==1){
+        newnode->pre=NULL;
+        newnode->next=front;
+        if(front!=NULL)
+        front->pre=newnode;
+        front=newnode;
+        if(rear==NULL)
+        rear=newnode;
+    }else{
+        struct node* temp=front;
+        for(int i=1;i<pos-1 && temp!=NULL;i++){
+            temp=temp->next;
+        }
+        if(temp==NULL){
+            cout<<"Position not found"<<endl;
+            delete newnode;
+            return;
+        }
+        newnode->pre=temp;
+        newnode->next=temp->next;
+        if(temp->next!=NULL)
+            temp->next->pre=newnode;
+        temp->next=newnode;
+        if(newnode->next==NULL)
+            rear=newnode;
+    }
+}
+void deleteatpos(int pos){
+    if(pos<1){
+        cout<<"Invalid position"<<endl;
+        return;
+    }
+    if(pos==1){
+        if(front==NULL){
+            cout<<"The list is empty"<<endl;
+            return;
+        }
+        struct node* temp=front;
+        cout<<"Deleting element "<<temp->data<<endl;
+        front=front->next;
+        if(front!=NULL)
+            front->pre=NULL;
+        else
+            rear=NULL;
+        delete temp;
+    }else{
+        struct node* temp=front;
+        struct node* p=NULL;
+        for(int i=1;i<pos && temp!=NULL;i++){
+            p=temp;
+            temp=temp->next;
+        }
+        if(temp==NULL){
+            cout<<"Position not found"<<endl;
+            return;
+        }
+        cout<<"Deleting element "<<temp->data<<endl;
+        p->next=temp->next;
+        if(temp->next!=NULL)
+            temp->next->pre=p;
+        else
+            rear=p;
+        delete temp;
+    }
+}
+void insertafterele(int ele){
+    struct node* temp=front;
+    while(temp!=NULL && temp->data!=ele){
+        temp=temp->next;
+    }
+    if(temp==NULL){
+        cout<<"Element not found in the list"<<endl;
+    }else{
+        insertatpos((temp==rear)?1:(temp->next?1:2));
+    }
+}
+void insertbeforeele(int ele){
+    struct node* temp=front;
+    while(temp!=NULL && temp->data!=ele){
+        temp=temp->next;
+    }
+    if(temp==NULL){
+        cout<<"Element not found in the list"<<endl;
+    }else{
+        int pos=(temp==front)?1:0;
+        insertatpos(pos);
+    }
+}
+void print(){
+    struct node* temp=front;
+    cout<<"The list elements are: ";
+    while(temp!=NULL){
+        cout<<temp->data<<" ";
+        temp=temp->next;
+    }
+    cout<<endl;
+}
+int main(){
+    int ch;
+    cout<<"Menu: "<<endl;
+    cout<<"1. Insert an element at rear end of the list"<<endl;
+    cout<<"2. Delete an element from the rear end of the list"<<endl;
+    cout<<"3. Insert an element at a given position of the list"<<endl;
+    cout<<"4. Delete an element at a given position of the list"<<endl;
+    cout<<"5. Insert an element after a given element of the list"<<endl;
+    cout<<"6. Insert an element before a given element of the list"<<endl;
+    cout<<"7. Print the list"<<endl;
+    cout<<"8. Exit"<<endl;
+    while(true){
+        cout<<"Enter your choice:";
+        cin>>ch;
+        switch(ch){
+            case 1:
+                cout<<"Enter the element to be added: ";
+                int e;
+                cin>>e;
+                insertatrear(e);
+                break;
+            case 2:
+                deleterear();
+                break;
+            case 3:
+                cout<<"Enter the position at which element to be added: ";
+                int p;
+                cin>>p;
+                insertatpos(p);
+                break;
+            case 4:
+                cout<<"Enter the position at which element to be deleted: ";
+                int pk;
+                cin>>pk;
+                deleteatpos(pk);
+                break;
+            case 5:
+                cout<<"Enter the element after which element to be added: ";
+                int ek;
+                cin>>ek;
+                insertafterele(ek);
+                break;
+            case 6:
+                cout<<"Enter the element before which element to be added: ";
+                int ee;
+                cin>>ee;
+                insertbeforeele(ee);
+                break;
+            case 7:
+                print();
+                break;
+            case 8:
+                cout<<"Exiting Program";
+                exit(0);
+            default:
+                cout<<"Invalid Input"<<endl;
+                break;
+        }
+    }
+}
+
+outpu:
+Menu:
+1. Insert an element at rear end of the list
+2. Delete an element from the rear end of the list
+3. Insert an element at a given position of the list
+4. Delete an element at a given position of the list
+5. Insert an element after a given element of the list
+6. Insert an element before a given element of the list
+7. Print the list
+8. Exit
+Enter your choice:2
+The List is empty already
+Enter your choice:1
+Enter the element to be added: 56
+Enter your choice:1
+Enter the element to be added: 34
+Enter your choice:1
+Enter the element to be added: 99
+Enter your choice:1
+Enter the element to be added: 4
+Enter your choice:7
+The list elements are: 56 34 99 4
+Enter your choice:2
+Enter your choice:7
+The list elements are: 56 34 99
+Enter your choice:5
+Enter the element after which element to be added: 34
+Enter data to add at position: 44
+Enter your choice:7
+The list elements are: 44 56 34 99
+Enter your choice:9
+Enter your choice:8
+Exiting Program
+
+Qn2-
+
+#include<iostream>
+using namespace std;
+struct Node{
+    int coeff;
+    int pow;
+    Node* next;
+    Node* prev;
+};
+class LinkedList{
+    public:
+        Node* head;
+        LinkedList(){
+            head=NULL;
+        }
+        void addNode(int coeff,int pow){
+            Node* newNode=new Node();
+            newNode->coeff=coeff;
+            newNode->pow=pow;
+            newNode->next=NULL;
+            newNode->prev=NULL;
+            if(head==NULL){
+                head=newNode;
+            }else{
+                Node* temp=head;
+            while(temp->next!=NULL){
+                temp=temp->next;
+            }
+            temp->next=newNode;
+            newNode->prev=temp;
+            }
+        }
+        LinkedList Add(LinkedList& ll1,LinkedList& ll2){
+            LinkedList sum;
+            Node* n1=ll1.head;
+            Node* n2=ll2.head;
+            while(n1!=NULL&&n2!=NULL){
+                if(n1->pow>n2->pow){
+                    sum.addNode(n1->coeff,n1->pow);
+                    n1=n1->next;
+                }else if(n1->pow<n2->pow){
+                    sum.addNode(n2->coeff,n2->pow);
+                    n2=n2->next;
+                }else{
+                    int coeffSum=n1->coeff+n2->coeff;
+                    if(coeffSum!=0){
+                    sum.addNode(coeffSum,n1->pow);
+                }
+                n1=n1->next;
+                n2=n2->next;
+                }
+            }
+            while(n1!=NULL){
+                sum.addNode(n1->coeff,n1->pow);
+                n1=n1->next;
+            }
+            while(n2!=NULL){
+                sum.addNode(n2->coeff,n2->pow);
+                n2=n2->next;
+            }
+            return sum;
+        }
+        void print(){
+            Node* temp=head;
+            while(temp!=NULL){
+                cout<<temp->coeff<<"x^"<<temp->pow;
+                if(temp->next!=NULL)
+                    cout<<" + ";
+                temp=temp->next;
+            }
+            cout<<endl;
+        }
+};
+int main(){
+    LinkedList ll1,ll2;
+    int n1,n2,coeff,exp;
+    cout<<"Enter the number of terms in polynomial 1: ";
+    cin>>n1;
+    for(int i=0;i<n1;i++){
+        cout<<"Enter the coefficient and exponent of term "<<(i+1)<<endl;
+        cin>>coeff>>exp;
+        ll1.addNode(coeff,exp);
+    }
+    cout<<"Enter the number of terms in polynomial 2: ";
+    cin>>n2;
+    for(int i=0;i<n2;i++){
+        cout<<"Enter the coefficient and exponent of term "<<(i+1)<<endl;
+        cin>>coeff>>exp;
+        ll2.addNode(coeff,exp);
+    }
+    cout<<"The resultant polynomial is: ";
+    LinkedList sum=sum.Add(ll1,ll2);
+    sum.print();
+    return 0;
+}
+
+output:
+
+Enter the number of terms in polynomial 1: 3
+Enter the coefficient and exponent of term 1
+3
+4
+Enter the coefficient and exponent of term 2
+2
+2
+Enter the coefficient and exponent of term 3
+3
+0
+Enter the number of terms in polynomial 2: 4
+Enter the coefficient and exponent of term 1
+4
+5
+Enter the coefficient and exponent of term 2
+3
+4
+Enter the coefficient and exponent of term 3
+7
+2
+Enter the coefficient and exponent of term 4
+2
+1
+The resultant polynomial is: 4x^5 + 6x^4 + 9x^2 + 2x^1 + 3x^0
+
+
+Week10
+
+Qn1-
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+struct node {
+    int data;
+    struct node* left;
+    struct node* right;
+    };
+
+struct node* create() {
+    struct node* newnode = new struct node;
+    int x;
+    cin >> x;
+    if (x == -1) {
+        delete newnode;
+        return nullptr;
+    }
+    newnode->data = x;
+    newnode->left = nullptr;
+    newnode->right = nullptr;
+
+    cout << "Enter data for left of " << x << ": ";
+    newnode->left = create();
+    cout << "Enter data for right of " << x << ": ";
+    newnode->right = create();
+    return newnode;
+}
+
+void preorder(struct node* ROOT) {
+    if (ROOT == nullptr) {
+        return;
+    }
+    cout << ROOT->data << " ";
+    preorder(ROOT->left);
+    preorder(ROOT->right);
+}
+
+void inorder(struct node* ROOT) {
+    if (ROOT == nullptr) {
+        return;
+    }
+    inorder(ROOT->left);
+    cout << ROOT->data << " ";
+    inorder(ROOT->right);
+}
+
+void postorder(struct node* ROOT) {
+    if (ROOT == nullptr) {
+        return;
+    }
+    postorder(ROOT->left);
+    postorder(ROOT->right);
+    cout << ROOT->data << " ";
+}
+
+int countLeafNodes(struct node* root) {
+    if (root == nullptr) {
+        return 0;
+    }
+    if (root->left == nullptr && root->right == nullptr) {
+        return 1;
+    }
+    return countLeafNodes(root->left) + countLeafNodes(root->right);
+}
+
+void freeTree(struct node* root) {
+    if (root == nullptr) {
+        return;
+    }
+    freeTree(root->left);
+    freeTree(root->right);
+    delete root;
+}
+
+int main() {
+    cout << "Enter the data (-1 if no child nodes): ";
+    struct node* root = create();
+    int ch;
+    cout << "The Tree has Been Created" << endl;
+
+    cout<<"Operations: "<<endl;
+    cout << "1. Pre-order Traversal" << endl;
+    cout << "2. In-order Traversal" << endl;
+    cout << "3. Post-order Traversal" << endl;
+    cout << "4. Count Leaf Nodes" << endl;
+    cout << "5. Exit" << endl;
+    do {
+        cout << "Enter your Choice:" << endl;
+        cin >> ch;
+        int counts = countLeafNodes(root);
+
+        switch (ch) {
+            case 1:
+                cout << "Preorder traversal of the created tree is: ";
+                preorder(root);
+                cout << endl;
+                break;
+            case 2:
+                cout << "Inorder traversal of the created tree is: ";
+                inorder(root);
+                cout << endl;
+                break;
+            case 3:
+                cout << "Postorder traversal of the created tree is: ";
+                postorder(root);
+                cout << endl;
+                break;
+            case 4:
+                cout << "The total number of leaf nodes in the given tree is " << counts << endl;
+                break;
+            case 5:
+                cout << "Exiting program" << endl;
+                exit(0);
+            default:
+                cout << "Invalid choice" << endl;
+                break;
+        }
+    } while (ch != 5);
+
+    freeTree(root);
+    return 0;
+}
+
+output:
+Enter the data (-1 if no child nodes): 23
+Please enter data for left of 23: 18
+Please enter data for left of 18: 12
+Please enter data for left of 12: -1
+Please enter data for right of 12: -1
+Please enter data for right of 18: 20
+Please enter data for left of 20: -1
+Please enter data for right of 20: -1
+Please enter data for right of 23: 44
+Please enter data for left of 44: 35
+Please enter data for left of 35: -1
+Please enter data for right of 35: -1
+Please enter data for right of 44: 52
+Please enter data for left of 52: -1
+Please enter data for right of 52: -1
+The Tree has Been Created
+Operations:
+1. Pre-order Traversal
+2. In-order Traversal
+3. Post-order Traversal
+4. Count Leaf Nodes
+5. Exit
+Enter your Choice:
+1
+Preorder traversal of the created tree is: 23 18 12 20 44 35 52
+Enter your Choice:
+2
+Inorder traversal of the created tree is: 12 18 20 23 35 44 52
+Enter your Choice:
+3
+Postorder traversal of the created tree is: 12 20 18 35 52 44 23
+Enter your Choice:
+4
+The total number of leaf nodes in the given tree is 4
+Enter your Choice:
+6
+Invalid choice
+Enter your Choice:
+5
+Exiting program
+
+Enter the data (-1 if no child nodes): 15
+Please enter data for left of 15: 7
+Please enter data for left of 7: 5
+Please enter data for left of 5: -1
+Please enter data for right of 5: -1
+Please enter data for right of 7: -1
+Please enter data for right of 15: 19
+Please enter data for left of 19: 17
+Please enter data for left of 17: 16
+Please enter data for left of 16: -1
+Please enter data for right of 16: -1
+Please enter data for right of 17: 18
+Please enter data for left of 18: -1
+Please enter data for right of 18: -1
+Please enter data for right of 19: 23
+Please enter data for left of 23: -1
+Please enter data for right of 23: -1
+The Tree has Been Created
+Operations:
+1. Pre-order Traversal
+2. In-order Traversal
+3. Post-order Traversal
+4. Count Leaf Nodes
+5. Exit
+Enter your Choice:
+1
+Preorder traversal of the created tree is: 15 7 5 19 17 16 18 23
+Enter your Choice:
+2
+Inorder traversal of the created tree is: 5 7 15 16 17 18 19 23
+Enter your Choice:
+3
+Postorder traversal of the created tree is: 5 7 16 18 17 23 19 15
+Enter your Choice:
+4
+The total number of leaf nodes in the given tree is 4
+Enter your Choice:
+5
+Exiting program
+
+
+Qn2-
+
+#include <iostream>
+using namespace std;
+
+struct node {
+int data;
+struct node* left;
+struct node* right;
+};
+
+struct node* create() {
+struct node* newnode = new struct node;
+int x;
+cin >> x;
+if (x == -1) {
+return nullptr;
+}
+newnode->data = x;
+newnode->left = nullptr;
+newnode->right = nullptr;
+
+cout << "Enter data for left of " << x << ": ";
+newnode->left = create();
+cout << "Enter data for right of " << x << ": ";
+newnode->right = create();
+return newnode;
+}
+
+void findParent(struct node* root, int ele, int& found) {
+if (root == nullptr || found) {
+return;
+}
+
+if ((root->left != nullptr && root->left->data == ele) ||
+    (root->right != nullptr && root->right->data == ele)) {
+cout << "Parent of " << ele << " is " << root->data << endl;
+found = 1;
+return;
+}
+findParent(root->left, ele, found);
+findParent(root->right, ele, found);
+}
+
+int treeDepth(struct node* root) {
+if (root == nullptr) {
+return 0;
+}
+return 1 + max(treeDepth(root->left), treeDepth(root->right));
+}
+
+bool findAncestors(struct node* root, int ele) {
+if (root == nullptr) {
+return false;
+}
+if (root->data == ele) {
+return true;
+}
+
+if (findAncestors(root->left, ele) || findAncestors(root->right, ele)) {
+cout << root->data << " ";
+return true;
+}
+return false;
+}
+
+int main() {
+cout << "Enter the data (-1 if no child nodes): ";
+struct node* root = create();
+int ch, e;
+cout << "The Tree has Been Created" << endl;
+
+cout<<"Operations: "<<endl;
+cout << "1. Find Parent of an element in tree" << endl;
+cout << "2. Find Depth of the tree" << endl;
+cout << "3. Find Ancestors of an element of the tree" << endl;
+cout << "4. Exit" << endl;
+while (true) {
+cout << "Enter your choice:" << endl;
+cin >> ch;
+
+switch (ch) {
+case 1: {
+cout << "Enter the element whose parent is to be known: ";
+cin >> e;
+if (root->data == e) {
+cout << "The element is the root element" << endl;
+} else {
+int found = 0;
+findParent(root, e, found);
+if (!found) {
+cout << "Element not found or has no parent." << endl;
+}
+}
+break;
+}
+case 2: {
+cout << "The depth of the tree is: " << treeDepth(root) << endl;
+break;
+}
+case 3: {
+cout << "Enter the element whose ancestors are to be found: ";
+cin >> e;
+cout << "Ancestors of " << e << " are: ";
+if (!findAncestors(root, e)) {
+cout << "Element not found." << endl;
+}
+cout << endl;
+break;
+}
+case 4:
+    cout<<"Exiting Program";
+exit(0);
+default:
+cout << "Invalid choice" << endl;
+break;
+}
+}
+}
+
+output:
+Enter the data (-1 if no child nodes): 15
+Enter data for left of 15: 7
+Enter data for left of 7: 5
+Enter data for left of 5: -1
+Enter data for right of 5: -1
+Enter data for right of 7: -1
+Enter data for right of 15: 19
+Enter data for left of 19: 17
+Enter data for left of 17: 16
+Enter data for left of 16: -1
+Enter data for right of 16: -1
+Enter data for right of 17: 18
+Enter data for left of 18: -1
+Enter data for right of 18: -1
+Enter data for right of 19: 23
+Enter data for left of 23: -1
+Enter data for right of 23: -1
+The Tree has Been Created
+Operations:
+1. Find Parent of an element in tree
+2. Find Depth of the tree
+3. Find Ancestors of an element of the tree
+4. Exit
+Enter your choice:
+1
+Enter the element whose parent is to be known: 17
+Parent of 17 is 19
+Enter your choice:
+2
+The depth of the tree is: 4
+Enter your choice:
+3
+Enter the element whose ancestors are to be found: 16
+Ancestors of 16 are: 17 19 15
+Enter your choice:
+5
+Invalid choice
+Enter your choice:
+4
+
+Enter the data (-1 if no child nodes): 8
+Enter data for left of 8: 6
+Enter data for left of 6: 3
+Enter data for left of 3: 1
+Enter data for left of 1: -1
+Enter data for right of 1: -1
+Enter data for right of 3: 4
+Enter data for left of 4: -1
+Enter data for right of 4: -1
+Enter data for right of 6: 7
+Enter data for left of 7: -1
+Enter data for right of 7: -1
+Enter data for right of 8: 12
+Enter data for left of 12: 10
+Enter data for left of 10: -1
+Enter data for right of 10: -1
+Enter data for right of 12: 14
+Enter data for left of 14: -1
+Enter data for right of 14: -1
+The Tree has Been Created
+Operations:
+1. Find Parent of an element in tree
+2. Find Depth of the tree
+3. Find Ancestors of an element of the tree
+4. Exit
+Enter your choice:
+1
+Enter the element whose parent is to be known: 7
+Parent of 7 is 6
+Enter your choice:
+2
+The depth of the tree is: 4
+Enter your choice:
+3
+Enter the element whose ancestors are to be found: 7
+Ancestors of 7 are: 6 8
+Enter your choice:
+4
+
+Qn3-
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+struct node {
+int data;
+struct node* left = nullptr;
+struct node* right = nullptr;
+};
+
+struct node* constructTree(struct node* root, int x) {
+if (root == nullptr) {
+struct node* newnode = new struct node;
+newnode->data = x;
+return newnode;
+}
+if (x < root->data) {
+root->left = constructTree(root->left, x);
+} else if (x > root->data) {
+root->right = constructTree(root->right, x);
+}
+return root;
+}
+
+void insert(struct node*& root) {
+int data;
+cout << "Enter data (-1 to exit): ";
+cin >> data;
+while (data != -1) {
+root = constructTree(root, data);
+cout << "Enter data (-1 to exit): ";
+cin >> data;
+}
+}
+
+bool search(int ele, struct node* root) {
+struct node* temp = root;
+while (temp != nullptr) {
+if (temp->data == ele)
+return true;
+if (temp->data > ele) {
+temp = temp->left;
+} else {
+temp = temp->right;
+}
+}
+return false;
+}
+
+void inorder(struct node* root) {
+if (root == nullptr) {
+return;
+}
+inorder(root->left);
+cout << root->data << " ";
+inorder(root->right);
+}
+
+void freeTree(struct node* root) {
+if (root == nullptr) {
+return;
+}
+freeTree(root->left);
+freeTree(root->right);
+delete root;
+}
+
+int main() {
+int ch, e;
+struct node* root = nullptr;
+while (true) {
+cout << "Please enter your choice:" << endl;
+cout << "1. Construct a binary search Tree" << endl;
+cout << "2. View tree" << endl;
+cout << "3. Search for an element in the tree" << endl;
+cout << "4. Exit" << endl;
+cin >> ch;
+switch (ch) {
+case 1:
+insert(root);
+cout << "Tree construction successful" << endl;
+break;
+case 2:
+cout << "The Inorder traversal of binary search tree is: ";
+inorder(root);
+cout << endl; // Added for clarity in output
+break;
+case 3: {
+cout << "Please enter element to be searched: ";
+cin >> e;
+if (search(e, root)) {
+cout << "The entered element is present in the tree" << endl;
+} else {
+cout << "The entered element is not present in the tree" << endl;
+}
+break;
+}
+case 4:
+freeTree(root); // Free allocated memory
+exit(0);
+default:
+cout << "Invalid choice. Please try again." << endl;
+break;
+}
+}
+}
